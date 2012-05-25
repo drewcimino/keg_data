@@ -1,0 +1,56 @@
+<html>
+	<head>
+		<link href='style.css' rel='stylesheet' type='text/css' media='screen'>
+		<script src='jquery-1.7.2.min.js'></script>
+		<script>			
+			load_info = function(){
+				$.ajax({
+					url: 'http://192.168.1.15/api/taps',
+					type: 'GET',
+					success: function(response){
+						var tap = response.result.taps[0];
+						$('#logo').html("<img src='http://192.168.1.15" + tap.beer_type.image.url + "'></img>");
+						$('#name').text(tap.beer_type.name);
+						$('#brewer').text(tap.brewer.name);
+						$('#abv').text('ABV: ' + tap.beer_type.abv + '%');
+						
+						update_temp();
+					}
+				});
+			}
+			
+			update_temp = function(){
+				$.ajax({
+					url: 'http://192.168.1.15/api/thermo-sensors/kegboard.thermo-f90000040ae89128',
+					type: 'GET',
+					success: function(sensor_data){
+						var deg_f = parseInt(parseFloat(sensor_data.result.last_temp) * (9/5) + 32);
+						$('#temperature').html(deg_f + "&deg;F")
+						setTimeout(update_quantity, 500);
+					}
+				});
+			}
+			
+			update_quantity = function(){
+				$.ajax({
+					url: 'http://192.168.1.15/api/taps',
+					type: 'GET',
+					success: function(response){
+						var pints = Math.round(parseFloat(response.result.taps[0].keg.volume_ml_remain / 473) * 100) / 100;
+						$('#beer_remaining').text(pints + ' pints consumed');
+						setTimeout(update_temp, 500);
+					}
+				});
+			}
+		</script>
+	</head>
+	
+	<body onload='load_info()'>
+		<div id='logo'></div>
+		<div id='name'></div>
+		<div id='temperature'></div>
+		<div id='beer_remaining'></div>
+		<div id='abv'></div>
+		<div id='brewer'></div>
+	</body>
+</html>

@@ -1,0 +1,12 @@
+div {
+	margin-left:auto;
+	margin-right:auto;
+	text-align:center;
+	font-family:Comic Sans MS;
+}
+#name {
+	font-size:4em;
+}
+#temperature {
+	font-size:4em;
+}

@@ -1,0 +1,3 @@
+### Keg Data
+
+This is a basic display for some beer stats pulled from the Kegbot web API. We mostly just need this to have something up until we get an actual Android app running with user management and cool metrics and shit.
